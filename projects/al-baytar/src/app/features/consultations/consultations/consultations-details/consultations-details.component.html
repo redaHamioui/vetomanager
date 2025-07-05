@@ -1,0 +1,489 @@
+
+
+
+<div *ngIf="selectedConsultation$ | async as selectedConsultation; else noSelectedConsultationTmpl">
+   <h3 class="title-heading">Consultation Details</h3>
+   <div class="action-buttons">
+      <alb-big-input-action fontSet="fas" fontIcon="trash" faIcon="trash" color="warn"
+        (action)="delete(selectedConsultation.id)"
+        [matTooltip]="'anms.examples.todos.tooltip.remove' | translate" matTooltipPosition="after">
+      </alb-big-input-action>
+      <alb-big-input-action fontSet="fas" fontIcon="edit" faIcon="edit" color="primary"
+        (action)="edit(selectedConsultation.id)"
+        [matTooltip]="'anms.examples.todos.tooltip.edit' | translate" matTooltipPosition="after">
+      </alb-big-input-action>
+      <alb-big-input-action fontSet="fas" fontIcon="check" faIcon="check" color="success"
+        (action)="validate(selectedConsultation.id)"
+        [matTooltip]="'anms.examples.todos.tooltip.validate' | translate" matTooltipPosition="after">
+      </alb-big-input-action>
+      <alb-big-input-action fontSet="fas" fontIcon="times" faIcon="times" color="warn"
+        (action)="reject(selectedConsultation.id)"
+        [matTooltip]="'anms.examples.todos.tooltip.reject' | translate" matTooltipPosition="after">
+      </alb-big-input-action>
+    </div>
+   <div class="full-width-container">
+     <!-- Wrap the two columns in a row -->
+     <div class="col-md-6">
+       <!-- Clinical Details Section -->
+       <div >
+         <mat-card class="motif-card">
+            <p class="date"><strong>Date:</strong> {{ selectedConsultation.dateApparition | date }} </p>
+            <p ><strong> Dr:</strong> {{ selectedConsultation.doctor  || 'Not available' }}</p>
+            <p class="motif text-center">
+               <strong>Motif:</strong> {{ selectedConsultation.motif || 'Not available' }}
+            </p>
+            <h5 class="title-heading">Patient Informations</h5>
+            <div class="header-container">
+             
+               <p ><strong>Name:</strong> {{ selectedConsultation.animal.name || 'Not available' }}</p>
+               <p><strong>Type:</strong> {{ selectedConsultation.animal.type || 'Not available' }}</p>
+               <p><strong>Age:</strong> {{ selectedConsultation.animal.age || 'Not available' }}</p>
+               <p><strong>Race:</strong> {{ selectedConsultation.animal.race || 'Not available' }}</p>
+               <p><strong>Sexe:</strong> {{ selectedConsultation.animal.sexe || 'Not available' }}</p>
+            </div>
+           
+         </mat-card>
+         <mat-card >
+            <h5 class="title-heading">Clinical Informations</h5>
+            <div class="details-grid">
+               <div class="details-row">
+                  <p><strong>Stade Physiologique:</strong> {{ selectedConsultation.stadePhysiologique || 'Not available' }}</p>
+                  <p><strong>Etat Général:</strong> 
+                     {{ selectedConsultation.examenClinique?.etatGeneral || 'Not available' }}
+                  </p>
+                  <p><strong>Duree Evolution:</strong> {{ selectedConsultation.dureeEvolution || 'Not available' }}</p>
+                  <p><strong>Symptoms:</strong></p>
+                  <ul *ngIf="selectedConsultation.symptomes?.length; else noSymptoms">
+                     <li *ngFor="let symptom of selectedConsultation.symptomes">
+                        <strong>Name:</strong> {{ symptom.name }} <br>
+                        <strong>Description:</strong> {{ symptom.description }} <br>
+                        <strong>Type:</strong> {{ symptom.type }} <br>
+                        <strong>Treatment Date:</strong> {{ symptom.dateTraitement | date:'yyyy-MM-dd' }} <br>
+                        <strong>Product Name:</strong> {{ symptom.nomProduit }} <br>
+                        <strong>Dosage:</strong> {{ symptom.dose }} <br>
+                        <strong>Duration:</strong> {{ symptom.duree }} days <br>
+                        <hr>
+                     </li>
+                     <button type="button" mat-fab color="primary" class="add" [ngClass]="routeAnimationsElements" (click)="addSymptom()">
+                      <fa-icon icon="plus"></fa-icon>
+                    </button>
+                  </ul>
+                  <ng-template #noSymptoms>
+                     <p>Not available</p>
+                   <button type="button" mat-fab color="primary" class="add" [ngClass]="routeAnimationsElements" (click)="addSymptom()">
+                      <fa-icon icon="plus"></fa-icon>
+                    </button>
+                  </ng-template>
+                  <div *ngIf="symptomes.length > 0">
+                   <div *ngFor="let symptom of symptomes; let i = index">
+                      <h3>Symptom {{ i + 1 }}</h3>
+                      <div class="row">
+                         <mat-form-field    class="col">
+                            <mat-label>Symptom Name</mat-label>
+                            <input matInput [(ngModel)]="symptom.name" name="symptomName{{ i }}" />
+                         </mat-form-field>
+                
+                         <mat-form-field    class="col">
+                            <mat-label>Description</mat-label>
+                            <input matInput [(ngModel)]="symptom.description" name="symptomDescription{{ i }}" />
+                         </mat-form-field>
+                      </div>
+                
+                      <div class="row">
+                         <mat-form-field    class="col">
+                            <mat-label>Type</mat-label>
+                            <input matInput [(ngModel)]="symptom.type" name="symptomType{{ i }}" />
+                         </mat-form-field>
+                
+                         <mat-form-field    class="col">
+                            <mat-label>Treatment Date</mat-label>
+                            <input matInput type="date" [(ngModel)]="symptom.dateTraitement" name="symptomDateTraitement{{ i }}" />
+                         </mat-form-field>
+                      </div>
+                
+                      <div class="row">
+                         <mat-form-field    class="col">
+                            <mat-label>Product Name</mat-label>
+                            <input matInput [(ngModel)]="symptom.nomProduit" name="symptomNomProduit{{ i }}" />
+                         </mat-form-field>
+                
+                         <mat-form-field    class="col">
+                            <mat-label>Dosage</mat-label>
+                            <input matInput [(ngModel)]="symptom.dose" name="symptomDose{{ i }}" />
+                         </mat-form-field>
+                      </div>
+                
+                      <div class="row">
+                         <mat-form-field    class="col">
+                            <mat-label>Duration (Days)</mat-label>
+                            <input matInput [(ngModel)]="symptom.duree" type="number" name="symptomDuree{{ i }}" />
+                         </mat-form-field>
+                      </div>
+                
+                      <div class="row">
+                         <button mat-button color="warn" (click)="removeSymptom(i)">Remove Symptom</button>
+                      </div>
+                      <div class="details-row">
+                         <p><strong>Temperature:</strong> {{ selectedConsultation.examenClinique?.temperature || 'Not available' }}</p>
+                         <p><strong>Frequence Cardiaque:</strong> {{ selectedConsultation.examenClinique?.frequenceCardiaque || 'Not available' }}</p>
+                         <p><strong>Treatment:</strong> {{ selectedConsultation.traitementInstaure || 'Not available' }}</p>
+                      </div>
+                      <hr />
+                   </div>
+                </div>
+                
+               </div>
+              
+               <div>
+               
+                <!-- Vaccins Section -->
+                <h4>Vaccins</h4>
+                <div *ngIf="selectedConsultation.animal.vaccins?.length else noVaccin">
+                   <div class="vaccins-container">
+                      <mat-card class="small-card" *ngFor="let vaccin of selectedConsultation.animal.vaccins">
+                         <p><strong>Name:</strong> {{ vaccin.type || 'Not available' }}</p>
+                         <p><strong>Date:</strong> {{ vaccin.date | date }}</p>
+                      </mat-card>
+                      <button type="button" mat-fab color="primary" class="add" [ngClass]="routeAnimationsElements" (click)="addVaccin()">
+                       <fa-icon icon="plus"></fa-icon>
+                     </button>
+                   </div>
+                </div>
+                <ng-template #noVaccin>
+                 <p>Not available</p>
+               <button type="button" mat-fab color="primary" class="add" [ngClass]="routeAnimationsElements" (click)="addVaccin()">
+                  <fa-icon icon="plus"></fa-icon>
+                </button>
+              </ng-template>
+              <div *ngIf="vaccins.length > 0">
+                 <div *ngFor="let vaccin of vaccins; let i = index">
+                    <h3>Vaccin {{ i + 1 }}</h3>
+                    <div class="row">
+                       <mat-form-field    class="col">
+                          <mat-label>Vaccine Name</mat-label>
+                          <input matInput [(ngModel)]="vaccin.type" name="vaccinType{{ i }}" />
+                       </mat-form-field>
+                       <mat-form-field    class="col">
+                          <mat-label>Vaccination Date</mat-label>
+                          <input matInput [matDatepicker]="vaccinDatePicker" [(ngModel)]="vaccin.date" name="vaccinDate{{ i }}" />
+                          <mat-datepicker-toggle matSuffix [for]="vaccinDatePicker"></mat-datepicker-toggle>
+                          <mat-datepicker #vaccinDatePicker></mat-datepicker>
+                       </mat-form-field>
+                    </div>
+                    <div class="row">
+                       <button mat-button color="warn" (click)="removeVaccin(i)">Remove Vaccin</button>
+                    </div>
+                    <hr />
+                 </div>
+              </div>
+               </div>
+             
+             
+            </div>
+         </mat-card>
+       </div>
+ 
+     
+     </div>
+       <!-- Tabs Section -->
+       <mat-card class="col-md-6">
+         <mat-tab-group>
+            <mat-tab label="Ordonnance">
+               <p><strong>Ordonnance Details:</strong></p>
+               <mat-card class="ordonnance-card">
+                  <!-- Header -->
+                  <div class="header">
+                     <h2>Ordonnance Médicale</h2>
+                     <p><strong>Date:</strong> {{ currentDate | date }}</p>
+                  </div>
+                  <!-- Patient Information -->
+                  <mat-card class="patient-info">
+                     <h3>Informations du Patient</h3>
+                     <mat-list>
+                        <mat-list-item>
+                           <strong>Nom:</strong> {{ selectedConsultation.animal.name || 'Not available' }}
+                        </mat-list-item>
+                        <mat-list-item>
+                           <strong>Âge:</strong> {{ selectedConsultation.animal.age || 'Not available' }}
+                        </mat-list-item>
+                        <mat-list-item>
+                           <strong>Sexe:</strong> {{ selectedConsultation.animal.sexe || 'Not available' }}
+                        </mat-list-item>
+                     </mat-list>
+                  </mat-card>
+                  <!-- Prescription Table -->
+                  <mat-card class="prescription-table">
+                     <h3>Prescription</h3>
+                     <table mat-table [dataSource]="prescriptions" class="mat-elevation-z8">
+                        <!-- Medication Column -->
+                        <ng-container matColumnDef="medication">
+                           <th mat-header-cell *matHeaderCellDef> Médicament </th>
+                           <td mat-cell *matCellDef="let element"> {{ element.medication }} </td>
+                        </ng-container>
+                        <!-- Dosage Column -->
+                        <ng-container matColumnDef="dosage">
+                           <th mat-header-cell *matHeaderCellDef> Dosage </th>
+                           <td mat-cell *matCellDef="let element"> {{ element.dosage }} </td>
+                        </ng-container>
+                        <!-- Duration Column -->
+                        <ng-container matColumnDef="duration">
+                           <th mat-header-cell *matHeaderCellDef> Durée </th>
+                           <td mat-cell *matCellDef="let element"> {{ element.duration }} </td>
+                        </ng-container>
+                        <!-- Instructions Column -->
+                        <ng-container matColumnDef="instructions">
+                           <th mat-header-cell *matHeaderCellDef> Instructions </th>
+                           <td mat-cell *matCellDef="let element"> {{ element.instructions }} </td>
+                        </ng-container>
+                        <!-- Header and Row Definitions -->
+                        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                     </table>
+                  </mat-card>
+                  <!-- Doctor Information -->
+                  <mat-card class="doctor-info">
+                     <h3>Informations du Médecin</h3>
+                     <mat-list>
+                        <mat-list-item>
+                           <strong>Nom:</strong> 
+                        </mat-list-item>
+                        <mat-list-item>
+                           <strong>Spécialité:</strong> 
+                        </mat-list-item>
+                        <mat-list-item>
+                           <strong>Signature:</strong>
+                        </mat-list-item>
+                     </mat-list>
+                  </mat-card>
+               </mat-card>
+               <!-- Add ordonnance content here -->
+            </mat-tab>
+            <mat-tab label="Compte-rendu">
+               <p><strong>Compte-rendu Information:</strong></p>
+               <mat-card class="compte-rendu-card">
+                  <!-- Header -->
+                  <div class="header">
+                     <h2>Compte-Rendu Vétérinaire</h2>
+                     <p><strong>Date:</strong> {{ currentDate | date: 'dd/MM/yyyy' }}</p>
+                  </div>
+                  <!-- Patient Information -->
+                  <mat-card class="section-card">
+                     <h3 class="section-title">Informations du Patient</h3>
+                     <div class="section-content">
+                        <div class="row">
+                           <div class="col">
+                              <p><strong>Nom de l'animal:</strong> {{ selectedConsultation.animal.name || 'Not available' }}</p>
+                              <p><strong>Espèce:</strong> {{ selectedConsultation.animal.type || 'Not available' }}</p>
+                           </div>
+                           <div class="col">
+                              <p><strong>Âge:</strong> {{ selectedConsultation.animal.age || 'Not available' }}</p>
+                              <p><strong>Sexe:</strong> {{ selectedConsultation.animal.sexe || 'Not available' }}</p>
+                           </div>
+                           <div class="col">
+                              <p><strong>Propriétaire:</strong> {{ selectedConsultation.client.name || 'Not available' }}</p>
+                           </div>
+                        </div>
+                     </div>
+                  </mat-card>
+                  <!-- Clinical Examination -->
+                  <mat-card class="section-card">
+                     <h3 class="section-title">Examen Clinique</h3>
+                     <div class="section-content">
+                        <div class="row">
+                           <div class="col">
+                              <p><strong>État Général:</strong> {{ clinicalExamination.etatGeneral }}</p>
+                              <p><strong>Température:</strong> {{ clinicalExamination.temperature }} °C</p>
+                           </div>
+                           <div class="col">
+                              <p><strong>Fréquence Cardiaque:</strong> {{ clinicalExamination.frequenceCardiaque }} bpm</p>
+                              <p><strong>Observations:</strong> {{ clinicalExamination.observations }}</p>
+                           </div>
+                        </div>
+                     </div>
+                  </mat-card>
+                  <!-- Diagnosis -->
+                  <mat-card class="section-card">
+                     <h3 class="section-title">Diagnostic</h3>
+                     <div class="section-content">
+                        <p>{{ diagnosis }}</p>
+                     </div>
+                  </mat-card>
+                  <!-- Treatment -->
+                  <mat-card class="section-card">
+                     <h3 class="section-title">Traitement</h3>
+                     <div class="section-content">
+                        <table mat-table [dataSource]="treatments" class="mat-elevation-z8">
+                           <!-- Medication Column -->
+                           <ng-container matColumnDef="medication">
+                              <th mat-header-cell *matHeaderCellDef> Médicament </th>
+                              <td mat-cell *matCellDef="let element"> {{ element.medication }} </td>
+                           </ng-container>
+                           <!-- Dosage Column -->
+                           <ng-container matColumnDef="dosage">
+                              <th mat-header-cell *matHeaderCellDef> Dosage </th>
+                              <td mat-cell *matCellDef="let element"> {{ element.dosage }} </td>
+                           </ng-container>
+                           <!-- Duration Column -->
+                           <ng-container matColumnDef="duration">
+                              <th mat-header-cell *matHeaderCellDef> Durée </th>
+                              <td mat-cell *matCellDef="let element"> {{ element.duration }} </td>
+                           </ng-container>
+                           <!-- Instructions Column -->
+                           <ng-container matColumnDef="instructions">
+                              <th mat-header-cell *matHeaderCellDef> Instructions </th>
+                              <td mat-cell *matCellDef="let element"> {{ element.instructions }} </td>
+                           </ng-container>
+                           <!-- Header and Row Definitions -->
+                           <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                           <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                        </table>
+                     </div>
+                  </mat-card>
+                  <!-- Doctor Information -->
+                  <mat-card class="section-card">
+                     <h3 class="section-title">Informations du Vétérinaire</h3>
+                     <div class="section-content">
+                        <div class="row">
+                           <div class="col">
+                              <p><strong>Nom:</strong> {{ doctor.name }}</p>
+                              <p><strong>Spécialité:</strong> {{ doctor.specialty }}</p>
+                           </div>
+                           <div class="col">
+                              <p><strong>Signature:</strong></p>
+                              <img [src]="doctor.signature" alt="Signature" class="signature">
+                           </div>
+                        </div>
+                     </div>
+                  </mat-card>
+               </mat-card>
+            </mat-tab>
+            <mat-tab label="Notes">
+               <p><strong>Doctor's Notes:</strong></p>
+               <mat-card class="notes-card">
+                  <!-- Header -->
+                  <div class="header">
+                     <h2>Notes du Vétérinaire</h2>
+                     <p><strong>Date:</strong> {{ currentDate | date: 'dd/MM/yyyy' }}</p>
+                  </div>
+                  <!-- Patient Information -->
+                  <mat-card class="section-card">
+                     <h3 class="section-title">Informations du Patient</h3>
+                     <div class="section-content">
+                        <div class="row">
+                           <div class="col">
+                              <p><strong>Nom de l'animal:</strong> {{ selectedConsultation.animal.name || 'Not available' }}</p>
+                              <p><strong>Espèce:</strong> {{ selectedConsultation.animal.type || 'Not available' }}</p>
+                           </div>
+                           <div class="col">
+                              <p><strong>Âge:</strong> {{ selectedConsultation.animal.age || 'Not available' }}</p>
+                              <p><strong>Sexe:</strong> {{ selectedConsultation.animal.sexe || 'Not available' }}</p>
+                           </div>
+                           <div class="col">
+                              <p><strong>Propriétaire:</strong> {{ selectedConsultation.client.name || 'Not available' }}</p>
+                           </div>
+                        </div>
+                     </div>
+                  </mat-card>
+                  <!-- Notes Section -->
+                  <mat-card class="section-card">
+                     <h3 class="section-title">Notes</h3>
+                     <div class="section-content">
+                        <!-- Add Note Form -->
+                        <form [formGroup]="noteForm" (ngSubmit)="addNote()">
+                        <div class="row">
+                           <mat-form-field    class="col">
+                              <mat-label>Titre de la note</mat-label>
+                              <input matInput formControlName="title" placeholder="Titre" required>
+                           </mat-form-field>
+                           <mat-form-field    class="col">
+                              <mat-label>Catégorie</mat-label>
+                              <mat-select formControlName="category" required>
+                                 <mat-option *ngFor="let category of noteCategories" [value]="category">
+                                 {{ category }}
+                                 </mat-option>
+                              </mat-select>
+                           </mat-form-field>
+                        </div>
+                        <mat-form-field    class="full-width">
+                           <mat-label>Description de la note</mat-label>
+                           <textarea matInput formControlName="description" placeholder="Écrivez votre note ici..." required></textarea>
+                        </mat-form-field>
+                        <button mat-raised-button color="primary" type="submit" [disabled]="noteForm.invalid">Ajouter</button>
+                        </form>
+                        <!-- Display Notes -->
+                        <div class="notes-list">
+                           <mat-card *ngFor="let note of notes" class="note-item">
+                              <p><strong>Date:</strong> {{ note.date | date: 'dd/MM/yyyy HH:mm' }}</p>
+                              <p><strong>Titre:</strong> {{ note.title }}</p>
+                              <p><strong>Catégorie:</strong> {{ note.category }}</p>
+                              <p>{{ note.description }}</p>
+                           </mat-card>
+                        </div>
+                     </div>
+                  </mat-card>
+                  <!-- Doctor Information -->
+                  <mat-card class="section-card">
+                     <h3 class="section-title">Informations du Vétérinaire</h3>
+                     <div class="section-content">
+                        <div class="row">
+                           <div class="col">
+                              <p><strong>Nom:</strong> {{ doctor.name }}</p>
+                              <p><strong>Spécialité:</strong> {{ doctor.specialty }}</p>
+                           </div>
+                           <div class="col">
+                              <p><strong>Signature:</strong></p>
+                              <img [src]="doctor.signature" alt="Signature" class="signature">
+                           </div>
+                        </div>
+                     </div>
+                  </mat-card>
+               </mat-card>
+            </mat-tab>
+            <mat-tab label="Radio">
+               <mat-card class="radio-card">
+                  <h2 class="section-title">Radiographies</h2>
+                  <!-- Form to add a new radiography -->
+                  <form [formGroup]="radioForm" (ngSubmit)="addRadio()" class="radio-form">
+                  <mat-form-field   >
+                     <mat-label>Type</mat-label>
+                     <mat-select formControlName="type">
+                        <mat-option value="X-ray">X-ray</mat-option>
+                        <mat-option value="MRI">MRI</mat-option>
+                        <mat-option value="CT Scan">CT Scan</mat-option>
+                        <mat-option value="Ultrasound">Ultrasound</mat-option>
+                     </mat-select>
+                  </mat-form-field>
+                  <mat-form-field   >
+                     <mat-label>Date</mat-label>
+                     <input matInput type="date" formControlName="date">
+                  </mat-form-field>
+                  <mat-form-field   >
+                     <mat-label>Zone</mat-label>
+                     <input matInput formControlName="zone">
+                  </mat-form-field>
+                  <mat-form-field   >
+                     <mat-label>Observations</mat-label>
+                     <textarea matInput formControlName="observations"></textarea>
+                  </mat-form-field>
+                  <input type="file" (change)="onFileSelected($event)">
+                  <button mat-raised-button color="primary" type="submit">Ajouter</button>
+                  </form>
+                  <!-- Liste des radiographies -->
+                  <div class="radio-list">
+                     <mat-card class="radio-form-card">
+                        <h2 class="section-title">Ajouter une Radiographie</h2>
+                     </mat-card>
+                  </div>
+               </mat-card>
+            </mat-tab>
+         </mat-tab-group>
+      </mat-card>
+   </div>
+ </div>
+ 
+ <ng-template #noSelectedConsultationTmpl>
+   <mat-card>
+     <mat-card-content>No consultation selected.</mat-card-content>
+   </mat-card>
+ </ng-template>
+

@@ -1,0 +1,70 @@
+// Custom Theming for Angular Material
+// For more information: https://material.angular.io/guide/theming
+@use '~@angular/material' as mat;
+
+@import 'styles-variables';
+
+@import '~bootstrap/scss/bootstrap-reboot';
+@import '~bootstrap/scss/bootstrap-grid';
+@import 'styles-reset';
+
+@include mat.core();
+
+@import './themes/default-theme';
+@import './themes/light-theme';
+@import './themes/black-theme';
+@import './themes/nature-theme';
+
+@import 'styles-reset.scss-theme';
+@import './app/app/app.component.scss-theme';
+@import './app/shared/big-input/big-input/big-input.component.scss-theme';
+@import './app/features/about/about/about.component.scss-theme';
+@import './app/features/consultations/consultations/consultations.component.scss-theme';
+
+@mixin custom-components-theme($theme) {
+  @include alb-styles-reset-theme($theme);
+  @include alb-app-component-theme($theme);
+  @include alb-about-component-theme($theme);
+  @include alb-big-input-component-theme($theme);
+  @include alb-consultations-component-theme($theme);
+}
+
+// Default theme
+.default-theme {
+  @include mat.all-component-themes($alb-theme);
+  @include custom-components-theme($alb-theme);
+}
+
+// Light theme
+.light-theme {
+  @include mat.all-component-themes($alb-light-theme);
+  @include custom-components-theme($alb-light-theme);
+}
+
+// Black theme
+.black-theme {
+  @include mat.all-component-themes($alb-black-theme);
+  @include custom-components-theme($alb-black-theme);
+}
+
+// Nature theme
+.nature-theme {
+  @include mat.all-component-themes($alb-nature-theme);
+  @include custom-components-theme($alb-nature-theme);
+}
+
+/* Add this to your root CSS file (styles.scss or styles.css) */
+.mat-row {
+  transition: background-color 0.3s ease;
+
+  &:hover {
+    background-color: #bccbff;
+    cursor: pointer;
+  }
+}
+
+/* Ensure the paginator is visible */
+.mat-paginator {
+  display: block;
+  margin-top: 16px; /* Add some spacing */
+}

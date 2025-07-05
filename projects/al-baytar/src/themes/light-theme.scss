@@ -1,0 +1,17 @@
+@use '~@angular/material' as mat;
+
+// Define the light theme palettes
+$alb-light-primary: mat.define-palette(mat.$grey-palette, 200, 500, 300);
+$alb-light-accent: mat.define-palette(mat.$brown-palette, 200);
+$alb-light-warn: mat.define-palette(mat.$deep-orange-palette, 200);
+
+// Create the light theme
+$alb-light-theme: mat.define-light-theme(
+  $alb-light-primary,
+  $alb-light-accent,
+  $alb-light-warn
+);
+
+// Apply the light theme to form fields
+@include mat.form-field-theme($alb-light-theme);
+

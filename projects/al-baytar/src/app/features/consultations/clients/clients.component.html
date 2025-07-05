@@ -1,0 +1,138 @@
+<div class="container-fluid client-list-page">
+  <div class="row">
+    <!-- Left Panel: Clients List -->
+    <div class="col-lg-4 col-md-12">
+      <mat-card class="list-card">
+        <mat-card-header class="custom-card-header">
+          <mat-card-title class="card-title"></mat-card-title>
+
+          <div class="search-container">
+            <form [formGroup]="searchForm" class="search-form">
+              <mat-form-field class="search-input w-100">
+                <mat-label>Search Clients</mat-label>
+                <input matInput formControlName="searchText" placeholder="Name, Phone, etc." aria-label="Search Clients" />
+              </mat-form-field>
+            </form>
+          </div>
+
+          <button mat-fab color="primary" (click)="openConsultationForm()" class="add-button" aria-label="Add Client">
+            <fa-icon icon="plus"></fa-icon>
+          </button>
+        </mat-card-header>
+
+        <mat-card-content>
+          <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8 w-100">
+            <!-- ID Column -->
+          
+            <!-- Motif Column -->
+            <ng-container matColumnDef="nom">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>NOM</th>
+              <td mat-cell *matCellDef="let consultation">{{ consultation.client.name }}</td>
+            </ng-container>
+
+            <!-- Created At Column -->
+            <ng-container matColumnDef="phone">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>PHONE</th>
+              <td mat-cell *matCellDef="let consultation">{{ consultation.client.phone }}</td>
+            </ng-container>
+
+            <!-- Updated At Column -->
+            <ng-container matColumnDef="email">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>EMAIL</th>
+              <td mat-cell *matCellDef="let consultation">{{ consultation.client.email }}</td>
+            </ng-container>
+
+            <!-- Date Apparition Column -->
+            <ng-container matColumnDef="dateApparition">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>Date</th>
+              <td mat-cell *matCellDef="let consultation">{{ consultation.dateApparition | date: 'mediumDate' }}</td>
+            </ng-container>
+
+          
+
+            <!-- Table Rows -->
+            <tr mat-header-row *matHeaderRowDef="displayedColumns" class="table-header-row"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;" (click)="onSelectConsultation(row)" [class.table-active]="selectedConsultation === row"></tr>
+          </table>
+
+
+          <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+        </mat-card-content>
+      </mat-card>
+    </div>
+
+  <!-- Right Panel: Client Details -->
+<div *ngIf="showDetail" class="col-lg-8 col-md-12">
+  <mat-card *ngIf="selectedConsultation"class="client-fiche-container details-card">
+    <mat-card-header>
+      <mat-card-title>
+    <p>{{ selectedConsultation.client.name }}</p> 
+    <p>{{ selectedConsultation.client.phone }}</p>
+    <p>{{ selectedConsultation.client.email }}</p>
+      </mat-card-title>
+  
+      <div class="action-buttons">
+        <alb-big-input-action fontSet="fas" fontIcon="trash" faIcon="trash" color="warn"
+          (action)="deleteClient()" *ngIf="selectedConsultation"
+          [matTooltip]="'anms.examples.todos.tooltip.remove' | translate" matTooltipPosition="after">
+        </alb-big-input-action>
+        <alb-big-input-action fontSet="fas" fontIcon="edit" faIcon="edit" color="primary"
+          (action)="editClient()" *ngIf="selectedConsultation"
+          [matTooltip]="'anms.examples.todos.tooltip.edit' | translate" matTooltipPosition="after">
+        </alb-big-input-action>
+      
+      </div>
+    
+    </mat-card-header>
+
+    <mat-card-content >
+
+
+      <!-- Animals Section -->
+      <div class="row mb-4">
+        <div class="col-12 col-md-6">
+          <h4>Animals</h4>
+          <div class="animal-cards">
+            <button mat-fab color="primary" class="add-button" aria-label="Add Animal" (click)="addAnimal()">
+              <fa-icon icon="plus"></fa-icon>
+            </button>
+            <mat-card class="animal-card">
+              <mat-card-title>{{ selectedConsultation.animal.name }}</mat-card-title>
+              <mat-card-content>
+                <p>Type: {{ selectedConsultation.animal.type }}</p>
+               
+              </mat-card-content>
+            </mat-card>
+          
+          </div>
+        </div>
+        <div class="col-12 col-md-6">
+          <h4>History</h4>
+          <div class="animal-cards">
+            <mat-card class="animal-card">
+              <mat-card-title>{{ selectedConsultation.animal.name }}</mat-card-title>
+              <mat-card-content>
+                <p>Type: {{ selectedConsultation.animal.type }}</p>
+              </mat-card-content>
+            </mat-card>
+            <mat-card class="animal-card">
+              <mat-card-title>{{ selectedConsultation.animal.name }}</mat-card-title>
+              <mat-card-content>
+                <p>Type: {{ selectedConsultation.animal.type }}</p>
+              </mat-card-content>
+            </mat-card>
+          </div>
+        </div>
+      </div>
+
+
+    </mat-card-content>
+
+    <mat-card-content *ngIf="!selectedConsultation">
+      <p>No client data available.</p>
+    </mat-card-content>
+  </mat-card>
+</div>
+
+  </div>
+</div>

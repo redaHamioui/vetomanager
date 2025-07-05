@@ -1,0 +1,25 @@
+<nav mat-tab-nav-bar class="d-none d-sm-flex">
+  <a mat-tab-link
+     *ngFor="let e of consultations"
+     [routerLink]="e.link"
+     routerLinkActive #rla="routerLinkActive"
+     [active]="rla.isActive"
+     >
+    {{e.label | translate}}
+  </a>
+</nav>
+
+<nav class="nav-responsive d-sm-none d-flex">
+    <mat-select [placeholder]="'alb.consultations.title' | translate" [value]="'todos'">
+      <mat-option *ngFor="let e of consultations"
+        [value]="e"
+        [routerLink]="e.link"
+       >
+          {{e.label | translate}}
+      </mat-option>
+    </mat-select>
+</nav>
+
+<div [@routeAnimations]="o.isActivated && o.activatedRoute.routeConfig?.path">
+  <router-outlet #o="outlet"></router-outlet>
+</div>

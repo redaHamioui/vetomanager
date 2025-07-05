@@ -1,0 +1,182 @@
+<div class="container-fluid">
+  <div class="row">
+    <!-- Left Column: Search Form -->
+    <div class="col-md-2">
+      <div class="card">
+        <div class="card-header">
+          <h5>Search</h5>
+        </div>
+        <div class="card-body">
+          <form [formGroup]="searchForm" class="search-form">
+            <!-- Search Text Input -->
+            <div class="row">
+              <mat-form-field >
+                <mat-label>Search</mat-label>
+                <input matInput formControlName="searchText" placeholder="Search by ID, Motif, etc." />
+              </mat-form-field>
+              <mat-form-field >
+                <mat-label>From Date</mat-label>
+                <input matInput type="date" formControlName="fromDate" />
+              </mat-form-field>
+              <mat-form-field >
+                <mat-label>To Date</mat-label>
+                <input matInput type="date" formControlName="toDate" />
+              </mat-form-field>
+            </div>
+
+            <!-- Buttons -->
+            <div class="button-group">
+              <button mat-raised-button color="primary" (click)="applyFilter()">
+                Search
+              </button>
+              <button type="button" mat-raised-button class="reset-button" (click)="resetFilter()">
+                Reset
+              </button>
+              <button mat-raised-button color="accent" (click)="exportToExcel()">
+                Export to Excel
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Column: Consultation List and Details -->
+    <div class="col-md-5">
+      <!-- Consultation List Table -->
+      <div class="card">
+        <div class="card-header">
+          <h5>Consultations</h5>
+        </div>
+        <div class="card-body">
+          <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8 w-100">
+            <!-- ID Column -->
+            <ng-container matColumnDef="id">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>Docteur</th>
+              <td mat-cell *matCellDef="let consultation">{{ consultation.id }}</td>
+            </ng-container>
+
+            <!-- Motif Column -->
+            <ng-container matColumnDef="motif">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>Motif</th>
+              <td mat-cell *matCellDef="let consultation">{{ consultation.motif }}</td>
+            </ng-container>
+
+            <!-- Created At Column -->
+            <ng-container matColumnDef="createdAt">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>Traitement</th>
+              <td mat-cell *matCellDef="let consultation">{{ consultation.createdAt }}</td>
+            </ng-container>
+
+            <!-- Updated At Column -->
+            <ng-container matColumnDef="updatedAt">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>Medication</th>
+              <td mat-cell *matCellDef="let consultation">{{ consultation.updatedAt }}</td>
+            </ng-container>
+
+            <!-- Date Apparition Column -->
+            <ng-container matColumnDef="dateApparition">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>Date</th>
+              <td mat-cell *matCellDef="let consultation">{{ consultation.dateApparition | date: 'mediumDate' }}</td>
+            </ng-container>
+
+            <!-- Actions Column -->
+            <ng-container matColumnDef="actions">
+              <th mat-header-cell *matHeaderCellDef>Actions</th>
+              <td mat-cell *matCellDef="let consultation">
+                <button mat-raised-button color="primary" class="action-button" (click)="consultationDetails(consultation.id)">
+                  Details
+                </button>
+              </td>
+            </ng-container>
+
+            <!-- Table Rows -->
+            <tr mat-header-row *matHeaderRowDef="displayedColumns" class="table-header-row"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;" (click)="onSelectConsultation(row)" [class.table-active]="selectedConsultation === row"></tr>
+          </table>
+
+          <!-- Paginator -->
+          <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+        </div>
+      </div>
+
+      <!-- Consultation Details Card -->
+    
+    </div>
+
+    <div *ngIf="selectedConsultation" class="card col-md-5">
+     
+      <div class="card-body">
+        <div class="row">
+          
+          <div class="col-md-12 d-flex flex-column align-items-center position-relative border p-3">
+            <div class="w-100 d-flex justify-content-between">
+                <p class="m-0"><strong>Docteur:</strong> {{ selectedConsultation.doctor }}</p>
+                <p class="m-0"><strong>Date:</strong> {{ selectedConsultation.dateApparition | date: 'mediumDate' }}</p>
+            </div>
+            <div class="p-3">
+              <div class="action-buttons">
+                <!-- Delete Button (Claire Red) -->
+                <alb-big-input-action fontSet="fas" fontIcon="trash" faIcon="trash" color="warn" (action)="delete(selectedConsultation.id)"
+                [matTooltip]="'anms.examples.todos.tooltip.remove' | translate" matTooltipPosition="after">
+                </alb-big-input-action>
+                <!-- Edit Button (Blue) -->
+                <alb-big-input-action fontSet="fas" fontIcon="edit" faIcon="edit" color="primary"
+                [matTooltip]="'anms.examples.todos.tooltip.edit' | translate" matTooltipPosition="after">
+                </alb-big-input-action>
+               
+                <!-- Reject Button (Red) -->
+                <alb-big-input-action fontSet="fas" fontIcon="times" faIcon="times" color="warn"
+                [matTooltip]="'anms.examples.todos.tooltip.reject' | translate" matTooltipPosition="after">
+                </alb-big-input-action>
+             </div>
+            </div>
+            <div class="col-md-12">
+              <mat-horizontal-stepper linear>
+                <mat-step 
+                label="Pending" 
+                [class.pending]="selectedConsultation.status === 'Pending'">
+                </mat-step>
+             
+                <mat-step 
+                label="In Progress" 
+                [class.in-progress]="selectedConsultation.status === 'In Progress'">
+                </mat-step>
+             
+                <mat-step 
+                label="Wait Payment" 
+                [class.wait-payment]="selectedConsultation.status === 'Wait Paiement'">
+                </mat-step>
+             
+                <mat-step 
+                label="Completed" 
+                [class.completed]="selectedConsultation.status === 'Completed'">
+                </mat-step>
+             
+                <mat-step 
+                label="Closed" 
+                [class.closed]="selectedConsultation.status === 'Closed'">
+                </mat-step>
+             </mat-horizontal-stepper>
+            </div>
+          
+           
+            <div class="p-3">
+              <p class="text-center"><strong>Motif:</strong> {{ selectedConsultation.motif }}</p>
+              <p class="text-center"><strong>Traitement:</strong> {{ selectedConsultation.createdAt | date: 'mediumDate' }}</p>
+              <p class="text-center"><strong>Medication:</strong> {{ selectedConsultation.updatedAt | date: 'mediumDate' }}</p>
+              <mat-form-field class="text-center" >
+                <mat-label>Total</mat-label>
+                <input matInput placeholder="Prix de la consultation" />
+              </mat-form-field>
+               <!-- Validate Button (Green) -->
+               <alb-big-input-action fontSet="fas" fontIcon="check" faIcon="check" color="success"
+               [matTooltip]="'anms.examples.todos.tooltip.validate' | translate" matTooltipPosition="after">
+               </alb-big-input-action>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

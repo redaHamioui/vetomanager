@@ -1,0 +1,77 @@
+@use '~@angular/material' as mat;
+/* Main heading styles */
+.main-heading {
+  text-transform: uppercase;
+  margin: 0 0 20px 0;
+  text-align: center;
+  color: rgb(11, 37, 140);
+}
+
+.colDr {
+  display: flex;
+  justify-content: center;  /* Horizontally center */
+  align-items: center;      /* Vertically center */
+  width: 100%;              /* Ensure the container spans full width */
+}
+
+/* Material card styles */
+.custom-card mat-card {
+  margin-bottom: 20px;
+}
+
+/* Button styles */
+.buttons {
+  margin: 20px 0;
+}
+ 
+.buttons button {
+  flex: 1 1 0;
+  margin: 0 10px 0 0;
+}
+
+.buttons button:last-of-type {
+  margin: 0;
+}
+
+//input outline color
+.mat-form-field-appearance-outline .mat-form-field-outline {
+  color: rgb(11, 37, 140);
+  border: 2px;
+}
+
+//mat-input focused color
+.mat-form-field-appearance-outline.mat-focused .mat-form-field-outline-thick {
+  color: rgb(18, 2, 199);
+}
+
+// mat-input error outline color
+.mat-form-field-appearance-outline.mat-form-field-invalid.mat-form-field-invalid .mat-form-field-outline-thick {
+  color: red;
+  opacity: 0.8;
+}
+
+// mat-input carent color
+::ng-deep .mat-input-element {
+  caret-color: red!important;
+}
+
+// mat-input error carent color
+::ng-deep .mat-form-field-invalid .mat-input-element, .mat-warn .mat-input-element {
+  caret-color: red!important;
+}
+
+// mat-label normal state style
+::ng-deep .mat-form-field-label {
+  color: rgba(0,0,0,.6)!important;
+  // color: $mainColor!important;
+}
+
+// mat-label focused style
+::ng-deep .mat-form-field.mat-focused .mat-form-field-label {
+  color: rgb(20, 13, 228)!important;
+}
+
+// mat-label error style
+::ng-deep .mat-form-field.mat-form-field-invalid .mat-form-field-label {
+  color: red!important;
+}

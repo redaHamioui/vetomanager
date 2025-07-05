@@ -1,0 +1,72 @@
+@import '../../styles-variables';
+
+h1 {
+  text-align: center;
+  font-size: 3em;
+  text-transform: uppercase;
+  margin-bottom: 20px;
+  color: white;
+}
+
+.login-form {
+  width: 100%;
+  max-width: 400px;
+  padding: 20px;
+  background: var(--primary-color, #02196a); /* Primary theme color */
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  color: white; /* White text */
+}
+
+.login-form .form-group {
+  margin-bottom: 15px;
+}
+
+.login-form label {
+  color: white;
+}
+
+.login-form .form-control {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: white;
+}
+
+.login-form .form-control::placeholder {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.background {
+  position: relative;
+  min-height: 100vh;
+  padding: 0;
+}
+
+.background::before {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  background-image: url('../../assets/home2.jpg');
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+  background-color: #a5b9e2;
+  opacity: 0.9;
+  content: '';
+  z-index: 0;
+}
+
+.gradient {
+  z-index: 1;
+  position: relative;
+  height: 100%;
+}
+
+.main-heading {
+  text-transform: uppercase;
+  margin: 0 0 20px 0;
+  text-align: center;
+  color: rgb(11, 37, 140);
+}

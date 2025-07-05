@@ -1,0 +1,13 @@
+@use '~@angular/material' as mat;
+
+// Your existing theme
+$alb-primary: mat.define-palette(mat.$indigo-palette, 800, 300, 900);
+$alb-accent: mat.define-palette(mat.$light-blue-palette);
+$alb-warn: mat.define-palette(mat.$pink-palette, 600);
+$alb-theme: mat.define-light-theme($alb-primary, $alb-accent, $alb-warn);
+
+// Apply the theme
+@include mat.all-component-themes($alb-theme);
+
+
+

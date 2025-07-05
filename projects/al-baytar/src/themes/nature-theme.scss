@@ -1,0 +1,11 @@
+@use '~@angular/material' as mat;
+
+$alb-nature-primary: mat.define-palette(mat.$brown-palette, 700, 300, 900);
+$alb-nature-accent: mat.define-palette(mat.$deep-purple-palette, 300);
+$alb-nature-warn: mat.define-palette(mat.$red-palette, 600);
+
+$alb-nature-theme: mat.define-light-theme(
+  $alb-nature-primary,
+  $alb-nature-accent,
+  $alb-nature-warn
+);

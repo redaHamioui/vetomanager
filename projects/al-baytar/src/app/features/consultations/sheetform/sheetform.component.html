@@ -1,0 +1,247 @@
+<div class="container-fluid">
+  <!-- Main Title -->
+  <div class="row">
+    <div class="col">
+      <h1 class="main-heading">{{ 'alb.consultations.form.clinic' | translate }}</h1>
+       
+    </div>
+  </div>
+
+  <!-- Form -->
+  <form *ngIf="form" [formGroup]="form" (ngSubmit)="submit()">
+    <div class="row justify-content-center">
+      <mat-card class="col-md-6">
+       
+        <mat-card-header (click)="toggleSection('client')" class="cursor-pointer">
+          <mat-card-title class="mat-primary">{{ 'alb.consultations.form.client' | translate }}</mat-card-title>
+        </mat-card-header>
+        <mat-card-content *ngIf="sections.client">
+          <div *ngIf="form.get('client')" formGroupName="client">
+            <div class="row">
+              <mat-form-field   class="col">
+                <mat-label>{{ 'alb.consultations.form.client.name' | translate }}</mat-label>
+                <input matInput formControlName="name" />
+                <mat-error *ngIf="form.get('client.name')?.hasError('required')">
+                  Name is required.
+                </mat-error>
+              </mat-form-field>
+              <mat-form-field   class="col">
+                <mat-label>{{ 'alb.consultations.form.client.phone' | translate }}</mat-label>
+                <input matInput formControlName="phone" />
+                <mat-error *ngIf="form.get('client.phone')?.hasError('required')">
+                  Phone is required.
+                </mat-error>
+              </mat-form-field>
+              <mat-form-field   class="col">
+                <mat-label>{{ 'alb.consultations.form.client.email' | translate }}</mat-label>
+                <input matInput formControlName="email" />
+              </mat-form-field>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+        <!-- Animal Information -->
+        <mat-card class="col-md-6">
+          <mat-card-header (click)="toggleSection('animal')" class="cursor-pointer">
+            <mat-card-title class="mat-primary">{{ 'alb.consultations.form.animal' | translate }}</mat-card-title>
+          </mat-card-header>
+          <mat-card-content *ngIf="sections.animal">
+            <div *ngIf="form.get('animal')" formGroupName="animal">
+              <div class="row">
+                <mat-form-field   class="col">
+                  <mat-label>{{ 'alb.consultations.form.animal.name' | translate }}</mat-label>
+                  <input matInput formControlName="name" />
+                </mat-form-field>
+                <mat-form-field   class="col">
+                  <mat-label>{{ 'alb.consultations.form.animal.type' | translate }}</mat-label>
+                  <mat-select formControlName="type">
+                    <mat-option *ngFor="let type of animalTypes" [value]="type">{{ type }}</mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+              <div class="row">
+                <mat-form-field   class="col">
+                  <mat-label>{{ 'alb.consultations.form.animal.age' | translate }}</mat-label>
+                  <input matInput type="number" formControlName="age" />
+                </mat-form-field>
+                <mat-form-field   class="col">
+                  <mat-label>{{ 'alb.consultations.form.animal.race' | translate }}</mat-label>
+                  <input matInput formControlName="race" />
+                </mat-form-field>
+                <mat-form-field   class="col">
+                  <mat-label>{{ 'alb.consultations.form.animal.sexe' | translate }}</mat-label>
+                  <mat-select formControlName="sexe">
+                    <mat-option value="Male">Male</mat-option>
+                    <mat-option value="Female">Female</mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      <div class="col-md-12">
+        <mat-card class="row">
+          <mat-card>
+            <mat-card-header (click)="toggleSection('consultation')" class="cursor-pointer">
+              <mat-card-title class="mat-primary">{{ 'alb.consultations.form.consultation' | translate }}</mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+              <div *ngIf="form.get('consultation')" formGroupName="consultation">
+                <div class="row">
+                  <mat-form-field   class="colDr">
+                    <mat-label>{{ 'alb.consultations.form.dr.name' | translate }}</mat-label>
+                    <mat-select  formControlName="doctor" >
+                      <mat-option *ngFor="let type of doctors" [value]="type">{{ type }}</mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                  <mat-form-field   class="col">
+                    <mat-label>{{ 'alb.consultations.form.consultation.motif' | translate }}</mat-label>
+                    <input matInput formControlName="motif" />
+                  </mat-form-field>
+                  <mat-form-field   class="col">
+                    <mat-label>{{ 'alb.consultations.form.consultation.stadePhysiologique' | translate }}</mat-label>
+                    <input matInput formControlName="stadePhysiologique" />
+                  </mat-form-field>
+                </div>
+                <div class="row">
+                  <mat-form-field   class="col">
+                    <mat-label>{{ 'alb.consultations.form.consultation.date.apparition' | translate }}</mat-label>
+                    <input matInput [matDatepicker]="datePicker" formControlName="dateApparition" />
+                    <mat-datepicker-toggle matSuffix [for]="datePicker"></mat-datepicker-toggle>
+                    <mat-datepicker #datePicker></mat-datepicker>
+                  </mat-form-field>
+                  <mat-form-field   class="col">
+                    <mat-label>{{ 'alb.consultations.form.consultation.dureeEvolution' | translate }}</mat-label>
+                    <input matInput formControlName="dureeEvolution" />
+                  </mat-form-field>
+                </div>
+                <div class="row">
+                  <mat-form-field   class="col">
+                    <mat-label>{{ 'alb.consultations.form.consultation.traitementInstaure' | translate }}</mat-label>
+                    <textarea matInput formControlName="traitementInstaure"></textarea>
+                  </mat-form-field>
+                </div>
+              </div>
+            </mat-card-content>
+          </mat-card>
+          <!-- Symptoms Section -->
+          <div formArrayName="symptoms">
+            <ng-container *ngFor="let symptom of symptoms.controls; let i = index" [formGroupName]="i">
+              <h3>Symptom {{ i + 1 }}</h3>
+              <div class="row">
+                <mat-form-field class="col">
+                  <mat-label>{{ 'alb.form.consultation.symptom.type' | translate }}</mat-label>
+                  <mat-select formControlName="type">
+                    <mat-option *ngFor="let type of symptomsArray" [value]="type">{{ type }}</mat-option>
+                  </mat-select>
+                </mat-form-field>
+                <mat-form-field class="col">
+                  <mat-label>{{ 'alb.form.consultation.symptom.dateTraitement' | translate }}</mat-label>
+                  <input matInput [matDatepicker]="picker" formControlName="dateTraitement" />
+                  <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                  <mat-datepicker #picker></mat-datepicker>
+                </mat-form-field>
+              </div>
+              <div class="row">
+                <mat-form-field class="col">
+                  <mat-label>{{ 'alb.form.consultation.symptom.nomProduit' | translate }}</mat-label>
+                  <input matInput formControlName="nomProduit" />
+                </mat-form-field>
+                <mat-form-field class="col">
+                  <mat-label>{{ 'alb.form.consultation.symptom.dose' | translate }}</mat-label>
+                  <input matInput formControlName="dose" />
+                </mat-form-field>
+              </div>
+              <div class="row">
+                <mat-form-field class="col">
+                  <mat-label>{{ 'alb.form.consultation.symptom.duree' | translate }}</mat-label>
+                  <input matInput formControlName="duree" />
+                </mat-form-field>
+                <button mat-button color="warn" (click)="removeSymptom(i)">Remove Symptom</button>
+              </div>
+              <hr />
+            </ng-container>
+          </div>
+          <!-- Add Symptom Button -->
+          <div class="row"> 
+            <div class="col-md-6">
+              <mat-label>{{ 'alb.consultations.form.consultation.newsymptom' | translate }}</mat-label>
+            </div>
+            <div class="col-md-6">
+              <button type="button" mat-fab color="primary" class="add" [ngClass]="routeAnimationsElements" (click)="addSymptom()">
+                <fa-icon icon="plus"></fa-icon>
+              </button>
+            </div>
+          </div>
+
+          <!-- Vaccins Section -->
+          <div *ngIf="showVaccinFields" formArrayName="vaccins">
+            <ng-container *ngFor="let vaccin of vaccins.controls; let i = index" [formGroupName]="i">
+              <h3>Vaccin {{ i + 1 }}</h3>
+              <div class="row">
+                <mat-form-field   class="col">
+                  <mat-label>{{ 'alb.consultations.form.vaccin.name' | translate }}</mat-label>
+                  <input matInput formControlName="type" />
+                </mat-form-field>
+                <mat-form-field   class="col">
+                  <mat-label>{{ 'alb.consultations.form.vaccin.date' | translate }}</mat-label>
+                  <input matInput [matDatepicker]="vaccinDatePicker" formControlName="date" />
+                  <mat-datepicker-toggle matSuffix [for]="vaccinDatePicker"></mat-datepicker-toggle>
+                  <mat-datepicker #vaccinDatePicker></mat-datepicker>
+                </mat-form-field>
+              </div>
+              <div class="row">
+                <button mat-button color="warn" (click)="removeVaccin(i)">Remove Vaccin</button>
+              </div>
+              <hr />
+            </ng-container>
+          </div>
+
+          <!-- Add Vaccin Button -->
+          <div class="row">
+            <div class="col-md-6">
+              <mat-label>{{ 'alb.consultations.form.consultation.newvaccin' | translate }}</mat-label>
+            </div>
+            <div class="col-md-6">
+              <button type="button" mat-fab color="primary" class="add" (click)="addVaccin()">
+                <fa-icon icon="plus"></fa-icon>
+              </button>
+            </div>
+          </div>
+
+          <!-- Examen Clinic -->
+          <mat-card>
+            <mat-card-header (click)="toggleSection('consultation')" class="cursor-pointer">
+              <mat-card-title class="mat-primary">{{ 'alb.consultations.form.ExamenClinic' | translate }}</mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+              <div *ngIf="form.get('examen')" formGroupName="examen">
+                <div class="row">
+                  <mat-form-field   class="col">
+                    <mat-label>{{ 'alb.consultations.form.consultation.etatGeneral' | translate }}</mat-label>
+                    <textarea matInput formControlName="etatGeneral"></textarea>
+                  </mat-form-field>
+                  <mat-form-field   class="col">
+                    <mat-label>{{ 'alb.consultations.form.consultation.temperature' | translate }}</mat-label>
+                    <textarea matInput formControlName="temperature"></textarea>
+                  </mat-form-field>
+                  <mat-form-field   class="col">
+                    <mat-label>{{ 'alb.consultations.form.consultation.frequenceCardiaque' | translate }}</mat-label>
+                    <textarea matInput formControlName="frequenceCardiaque"></textarea>
+                  </mat-form-field>
+                </div>
+              </div>
+            </mat-card-content>
+          </mat-card>
+
+          <!-- Form Buttons -->
+          <div class="row buttons d-flex justify-content-between pad">
+            <button mat-raised-button color="primary" [disabled]="form.invalid">{{ 'alb.consultations.form.submit' | translate }}</button>
+            <button type="button" mat-raised-button color="accent" (click)="save()">{{ 'alb.consultations.form.save' | translate }}</button>
+            <button type="reset" mat-raised-button (click)="reset()">{{ 'alb.consultations.form.reset' | translate }}</button>
+          </div>
+        </mat-card>
+      </div>
+    </div>
+  </form>
+</div>

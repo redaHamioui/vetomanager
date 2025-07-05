@@ -1,0 +1,62 @@
+{
+    "_id": "client_id_1",
+    "first_name": "John",
+    "last_name": "Doe",
+    "address": "123 Main Street",
+    "phone_no": "12345678901",
+    "patients": [
+        {
+            "patient_id": "patient_1",
+            "species": { "id": "species_id_1", "name": "Dog", "unit": "Small Animal" },
+            "breed": { "id": "breed_id_1", "name": "Golden Retriever" },
+            "sex": "Male",
+            "age_group": "Adult",
+            "cases": [
+                {
+                    "case_id": "case_1",
+                    "date": "2024-01-10",
+                    "status": "New",
+                    "diagnosis": { "id": "diagnosis_id_1", "name": "Allergy" },
+                    "case_type": "Medical",
+                    "notes": "Mild skin rash",
+                    "doctor": {
+                        "vcn_no": "vcn_123",
+                        "first_name": "Dr. Smith",
+                        "last_name": "Jones",
+                        "phone_no": "12345678901",
+                        "email": "smith@example.com",
+                        "year_graduated": 2015
+                    },
+                    "prescriptions": [
+                        {
+                            "prescription_id": "prescription_1",
+                            "date": "2024-01-10",
+                            "medications": [
+                                {
+                                    "trade_name": "MedName1",
+                                    "generic_name": "GenericName1",
+                                    "category": "Antibiotics",
+                                    "unit": "Gram",
+                                    "quantity": 10,
+                                    "frequency": "12 hourly",
+                                    "route": "PO",
+                                    "cost_price_per_unit": 2.5,
+                                    "sale_price_per_unit": 3.0,
+                                    "expiration_date": "2025-01-01"
+                                }
+                            ]
+                        }
+                    ],
+                    "payments": [
+                        {
+                            "receipt_id": "receipt_1",
+                            "date": "2024-01-10",
+                            "total_amount": 30.0,
+                            "payment_method": "Card"
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}
