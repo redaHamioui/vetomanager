@@ -14,10 +14,19 @@ export const selectFormState = createSelector(
 
 export const selectBooks = createSelector(
   selectConsultations,
-  (state: ConsultationsState) => state.consultations
+  (state: ConsultationsState) => {
+    console.log('selectBooks - Full consultations state:', state);
+    console.log('selectBooks - consultations slice:', state.consultations);
+    return state.consultations;
+  }
 );
 
-export const selectAllConsultations = createSelector(selectBooks, selectAll);
+export const selectAllConsultations = createSelector(selectBooks, (consultationState) => {
+  console.log('selectAllConsultations - consultationState:', consultationState);
+  const result = selectAll(consultationState);
+  console.log('selectAllConsultations - result from selectAll:', result);
+  return result;
+});
 
 export const selectConsultationsEntities = createSelector(
   selectBooks,

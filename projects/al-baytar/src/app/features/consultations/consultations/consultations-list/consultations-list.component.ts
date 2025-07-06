@@ -12,7 +12,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import * as XLSX from 'xlsx';
-import { actionConsultationsDeleteOne } from '../../sheetform/store/sheetform.actions';
+import { actionConsultationsDeleteOne, actionConsultationsUpsertOne } from '../../sheetform/store/sheetform.actions';
 
 @Component({
   selector: 'alb-consultations-list',
@@ -56,13 +56,27 @@ throw new Error('Method not implemented.');
   }
 
   ngOnInit(): void {
+    console.log('ConsultationsListComponent ngOnInit - Starting to subscribe to consultations');
+    
+    // Debug: Check what's in localStorage
+    console.log('LocalStorage CONSULTATIONS:', localStorage.getItem('CONSULTATIONS'));
+    console.log('LocalStorage consultationState:', localStorage.getItem('consultationState'));
+    
     this.consultations$
       .pipe(takeUntil(this.destroy$))
       .subscribe((consultations: Consultation[]) => {
+        console.log('ConsultationsListComponent - Received consultations from store:', consultations);
+        console.log('ConsultationsListComponent - Number of consultations:', consultations?.length || 0);
+        console.log('ConsultationsListComponent - Type of consultations:', typeof consultations);
+        console.log('ConsultationsListComponent - Is array:', Array.isArray(consultations));
+        
         this.consultations = consultations || [];
         this.dataSource.data = consultations || [];
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
+        
+        console.log('ConsultationsListComponent - Updated dataSource.data:', this.dataSource.data);
+        console.log('ConsultationsListComponent - Updated this.consultations:', this.consultations);
       });
 
     // Listen to changes in the search text input
@@ -132,6 +146,49 @@ throw new Error('Method not implemented.');
 
     // Write the file and trigger download
     XLSX.writeFile(workbook, fileName);
+  }
+
+  // Add test consultation for debugging
+  addTestConsultation() {
+    const testConsultation: Consultation = {
+      id: 'test-' + Date.now(),
+      doctor: 'Dr. Test',
+      client: {
+        id: 'client-1',
+        codeClient: 'C001',
+        name: 'Test Client',
+        phone: '123456789',
+        email: 'test@example.com',
+        createdAt: new Date(),
+        updatedAt: new Date()
+      },
+      animal: {
+        id: 'animal-1',
+        name: 'Test Animal',
+        type: 'Dog',
+        age: '5',
+        race: 'Golden Retriever',
+        sexe: 'Male',
+        vaccins: []
+      },
+      motif: 'Test consultation',
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      stadePhysiologique: 'Adult',
+      dateApparition: new Date(),
+      dureeEvolution: '1 day',
+      traitementInstaure: 'Test treatment',
+      symptomes: [],
+      examenClinique: {
+        etatGeneral: 'Bon',
+        temperature: 38.5,
+        frequenceCardiaque: 80
+      },
+      status: 'Pending'
+    };
+    
+    console.log('Adding test consultation:', testConsultation);
+    this.store.dispatch(actionConsultationsUpsertOne({ consultation: testConsultation }));
   }
 
   ngOnDestroy(): void {

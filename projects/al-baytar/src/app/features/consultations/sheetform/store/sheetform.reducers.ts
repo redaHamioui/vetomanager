@@ -22,7 +22,9 @@ export const initialSheetFormState: SheetFormState = loadStateFromLocalStorage(
 export interface ConsultationState extends EntityState<Consultation> {}
 
 export const consultationAdapter: EntityAdapter<Consultation> =
-  createEntityAdapter<Consultation>();
+  createEntityAdapter<Consultation>({
+    selectId: (consultation: Consultation) => consultation.id
+  });
 
   export const initialConsultationState: ConsultationState = loadStateFromLocalStorage(
     'CONSULTATIONS',
@@ -83,7 +85,7 @@ export function consultationReducer(
   let newState = consultationReducerInternal(state, action);
 
   // Sauvegarde dans LocalStorage après chaque modification
-  saveStateToLocalStorage(newState, 'consultationState');
+  saveStateToLocalStorage(newState, 'CONSULTATIONS');
 
   return newState;
 }
@@ -99,7 +101,10 @@ function saveStateToLocalStorage(state: any, key: string) {
 function loadStateFromLocalStorage<T>(key: string, defaultValue: T): T {
   try {
     const storedState = localStorage.getItem(key);
-    return storedState ? JSON.parse(storedState) : defaultValue;
+    console.log(`loadStateFromLocalStorage - Key: ${key}, Stored data:`, storedState);
+    const result = storedState ? JSON.parse(storedState) : defaultValue;
+    console.log(`loadStateFromLocalStorage - Key: ${key}, Parsed result:`, result);
+    return result;
   } catch (e) {
     console.error('Error loading from LocalStorage', e);
     return defaultValue;

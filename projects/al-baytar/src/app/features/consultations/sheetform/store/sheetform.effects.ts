@@ -57,10 +57,33 @@ export class SheetformEffects {
   private saveToLocalStorage(consultation: Consultation) {
     try {
       const storedData = localStorage.getItem(CONSULTATION_KEY);
-      const consultations: Consultation[] = storedData ? JSON.parse(storedData) : [];
+      let consultations: Consultation[] = [];
+      
+      if (storedData) {
+        const parsedData = JSON.parse(storedData);
+        // Handle both EntityState format and simple array format
+        if (parsedData.entities && parsedData.ids) {
+          // EntityState format
+          consultations = parsedData.ids.map((id: string) => parsedData.entities[id]);
+        } else if (Array.isArray(parsedData)) {
+          // Simple array format
+          consultations = parsedData;
+        }
+      }
+      
+      // Add new consultation
       const updatedConsultations = [...consultations, consultation];
-
-      localStorage.setItem(CONSULTATION_KEY, JSON.stringify(updatedConsultations));
+      
+      // Save as EntityState format to match reducer expectations
+      const entityState = {
+        ids: updatedConsultations.map(c => c.id),
+        entities: updatedConsultations.reduce((acc, consultation) => {
+          acc[consultation.id] = consultation;
+          return acc;
+        }, {} as { [key: string]: Consultation })
+      };
+      
+      localStorage.setItem(CONSULTATION_KEY, JSON.stringify(entityState));
     } catch (e) {
       console.error('Error saving consultation to LocalStorage', e);
     }

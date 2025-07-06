@@ -35,6 +35,9 @@
               <button mat-raised-button color="accent" (click)="exportToExcel()">
                 Export to Excel
               </button>
+              <button mat-raised-button color="warn" (click)="addTestConsultation()">
+                Add Test Consultation
+              </button>
             </div>
           </form>
         </div>
@@ -49,6 +52,14 @@
           <h5>Consultations</h5>
         </div>
         <div class="card-body">
+          <!-- Debug section -->
+          <div class="debug-section" style="background: #f0f0f0; padding: 10px; margin-bottom: 10px;">
+            <h6>Debug Info:</h6>
+            <p>Consultations count: {{ consultations.length }}</p>
+            <p>DataSource data count: {{ dataSource.data.length }}</p>
+            <p>Raw consultations: {{ consultations | json }}</p>
+          </div>
+          
           <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8 w-100">
             <!-- ID Column -->
             <ng-container matColumnDef="id">
